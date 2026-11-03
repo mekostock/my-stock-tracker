@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Stock Tracker</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b1220">
+<style>body{font-family:system-ui,sans-serif;background:#0b1220;color:#e8eefc;margin:0;padding:16px}h1{font-size:22px}button{background:#f5c518;border:0;padding:10px 14px;border-radius:8px;font-weight:700}.grid{display:grid;gap:10px}.card{background:#16213a;border:1px solid #26365e;border-radius:12px;padding:12px}.up{color:#4ade80}.down{color:#f87171}.small{color:#94a3b8;font-size:13px}.badge{font-size:12px;padding:2px 6px;border-radius:999px;background:#26365e}</style>
+</head><body>
+<h1>My Stock Tracker</h1>
+<p class="small">Tracking all day while this app is open: auto-refresh every 60 seconds. Quotes are delayed, not tick-by-tick live.</p>
+<button id="refresh">Refresh now</button> <span id="time" class="small"></span>
+<div id="board" class="grid" style="margin-top:14px"></div>
+<p class="small">SpaceX is a private company, not publicly traded, so it has no public stock price.</p>
+<script>
+const SYMS=[["NVDA","nvda"],["QQQ","qqq"],["Tesla","tsla"],["SPY","spy"],["Microsoft","msft"],["Apple","aapl"]];
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+async function fetchText(u){const r=await fetch(u); if(!r.ok) throw new Error('HTTP '+r.status); return r.text()}
+async function stooq(){
+  const syms=SYMS.map(x=>x[1]).join(',');
+  const urls=['https://stooq.com/q/l/?s='+SYMS.map(x=>x[1]+'.us').join(',')+'&f=sd2t2ohlcv&h&e=csv','https://api.allorigins.win/raw?url='+encodeURIComponent('https://stooq.com/q/l/?s='+SYMS.map(x=>x[1]+'.us').join(',')+'&f=sd2t2ohlcv&h&e=csv')];
+  for(const u of urls){ try{ const t=await fetchText(u); const lines=t.trim().split('\n').slice(1); const out={};
+    for(const ln of lines){ const p=ln.split(','); const s=p[0].replace('.US','').toLowerCase(); out[s]={price:parseFloat(p[6]),change:parseFloat(p[8]),date:p[1]}; }
+    if(Object.keys(out).length) return out; }catch(e){} }
+  throw new Error('Stooq failed');
+}
+async function load(){
+  document.getElementById('board').innerHTML='<p class="small">Loading delayed quotes…</p>';
+  try{ const q=await stooq(); document.getElementById('time').textContent='Last updated: '+new Date().toLocaleTimeString()+' · Source: Stooq · Delayed';
+    document.getElementById('board').innerHTML=SYMS.map(([name,sym])=>{const v=q[sym]; if(!v||!isFinite(v.price)) return '<div class="card"><b>'+esc(name)+'</b> <span class="badge">Unavailable</span></div>';
+      const cls=v.change>=0?'up':'down'; return '<div class="card"><b>'+esc(name)+' ('+sym.toUpperCase()+')</b><br><b>$'+v.price.toFixed(2)+'</b> <span class="'+cls+'">'+(v.change>=0?'+':'')+v.change.toFixed(2)+'%</span><br><span class="badge">Delayed</span> <span class="small">'+esc(v.date||'')+'</span></div>'}).join('')+'<div class="card"><b>SpaceX</b><br><span class="badge">Private company</span><br><span class="small">Not publicly traded, no public stock price.</span></div>';
+  }catch(e){ document.getElementById('board').innerHTML='<p class="small">Market data unavailable right now. Try Refresh again later. No prices are shown rather than stale or wrong numbers.</p><div class="card"><b>SpaceX</b><br><span class="badge">Private company</span><br><span class="small">Not publicly traded, no public stock price.</span></div>'; }
+}
+document.getElementById('refresh').onclick=load; load();
+setInterval(()=>{ if(!document.hidden) load(); },60000);
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) load(); });
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
+</script></body></html>
