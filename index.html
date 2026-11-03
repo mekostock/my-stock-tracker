@@ -34,10 +34,17 @@ async function yahooQuotes(){
   }
   return out;
 }
+async function quotesJson(){
+  const r=await fetch('./quotes.json?x='+Date.now()); if(!r.ok) throw new Error('no quotes.json');
+  const j=await r.json(); const out={};
+  for(const [name,sym] of SYMS){ const v=j[sym]||j[sym.toUpperCase()]; if(v&&isFinite(v.price)) out[sym]={price:v.price,change:v.change||0,date:v.date||''}; }
+  return {quotes:out,updated:j.updated||''};
+}
 async function load(){
   document.getElementById('board').innerHTML='<p class="small">Loading delayed quotes…</p>';
   try{ let q={}; let src='Stooq';
-    try{ q=await stooq(); }catch(e){ q={}; }
+    try{ const jq=await quotesJson(); if(Object.keys(jq.quotes).length){ q=jq.quotes; src='Server-updated file'+(jq.updated?' · Updated '+jq.updated:''); } }catch(e){}
+    if(!Object.keys(q).length){ try{ q=await stooq(); }catch(e){ q={}; } }
     if(!Object.keys(q).length || !SYMS.some(([n,s])=>q[s]&&isFinite(q[s].price))){ q=await yahooQuotes(); src='Yahoo Finance'; }
     if(!Object.keys(q).length) throw new Error('All feeds failed');
     document.getElementById('time').textContent='Last updated: '+new Date().toLocaleTimeString()+' · Source: '+src+' · Delayed';
