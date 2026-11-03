@@ -78,5 +78,5 @@ async function load(){
 document.getElementById('refresh').onclick=load; load();
 setInterval(()=>{ if(!document.hidden) load(); },60000);
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden) load(); });
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=6'); }
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=7'); }
 </script></body></html>
