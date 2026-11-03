@@ -19,13 +19,28 @@ async function stooq(){
   const syms=SYMS.map(x=>x[1]).join(',');
   const urls=['https://stooq.com/q/l/?s='+SYMS.map(x=>x[1]+'.us').join(',')+'&f=sd2t2ohlcv&h&e=csv','https://api.allorigins.win/raw?url='+encodeURIComponent('https://stooq.com/q/l/?s='+SYMS.map(x=>x[1]+'.us').join(',')+'&f=sd2t2ohlcv&h&e=csv')];
   for(const u of urls){ try{ const t=await fetchText(u); const lines=t.trim().split('\n').slice(1); const out={};
-    for(const ln of lines){ const p=ln.split(','); const s=p[0].replace('.US','').toLowerCase(); out[s]={price:parseFloat(p[6]),change:parseFloat(p[8]),date:p[1]}; }
+    for(const ln of lines){ const p=ln.split(','); const s=p[0].replace('.US','').toLowerCase(); out[s]={price:parseFloat(p[6]),change:isFinite(parseFloat(p[8]))?parseFloat(p[8]):0,date:p[1]}; }
     if(Object.keys(out).length) return out; }catch(e){} }
   throw new Error('Stooq failed');
 }
+async function yahooQuotes(){
+  const out={};
+  for(const [name,sym] of SYMS){
+    const urls=['https://api.allorigins.win/raw?url='+encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/'+sym.toUpperCase()+'?range=5d&interval=1d'),
+      'https://query1.finance.yahoo.com/v8/finance/chart/'+sym.toUpperCase()+'?range=5d&interval=1d'];
+    for(const u of urls){ try{ const r=await fetch(u); if(!r.ok) continue; const j=await r.json(); const res=j.chart&&j.chart.result&&j.chart.result[0]; const meta=res&&res.meta; if(!meta||!isFinite(meta.regularMarketPrice)) continue;
+      const prev=meta.chartPreviousClose||meta.previousClose; const ch=prev?((meta.regularMarketPrice-prev)/prev*100):0;
+      out[sym]={price:meta.regularMarketPrice,change:ch,date:new Date(meta.regularMarketTime*1000).toLocaleDateString()}; break; }catch(e){} }
+  }
+  return out;
+}
 async function load(){
   document.getElementById('board').innerHTML='<p class="small">Loading delayed quotes…</p>';
-  try{ const q=await stooq(); document.getElementById('time').textContent='Last updated: '+new Date().toLocaleTimeString()+' · Source: Stooq · Delayed';
+  try{ let q={}; let src='Stooq';
+    try{ q=await stooq(); }catch(e){ q={}; }
+    if(!Object.keys(q).length || !SYMS.some(([n,s])=>q[s]&&isFinite(q[s].price))){ q=await yahooQuotes(); src='Yahoo Finance'; }
+    if(!Object.keys(q).length) throw new Error('All feeds failed');
+    document.getElementById('time').textContent='Last updated: '+new Date().toLocaleTimeString()+' · Source: '+src+' · Delayed';
     document.getElementById('board').innerHTML=SYMS.map(([name,sym])=>{const v=q[sym]; if(!v||!isFinite(v.price)) return '<div class="card"><b>'+esc(name)+'</b> <span class="badge">Unavailable</span></div>';
       const cls=v.change>=0?'up':'down'; return '<div class="card"><b>'+esc(name)+' ('+sym.toUpperCase()+')</b><br><b>$'+v.price.toFixed(2)+'</b> <span class="'+cls+'">'+(v.change>=0?'+':'')+v.change.toFixed(2)+'%</span><br><span class="badge">Delayed</span> <span class="small">'+esc(v.date||'')+'</span></div>'}).join('')+'<div class="card"><b>SpaceX</b><br><span class="badge">Private company</span><br><span class="small">Not publicly traded, no public stock price.</span></div>';
   }catch(e){ document.getElementById('board').innerHTML='<p class="small">Market data unavailable right now. Try Refresh again later. No prices are shown rather than stale or wrong numbers.</p><div class="card"><b>SpaceX</b><br><span class="badge">Private company</span><br><span class="small">Not publicly traded, no public stock price.</span></div>'; }
