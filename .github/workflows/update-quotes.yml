@@ -46,6 +46,38 @@ jobs:
                       out[sym.lower()] = {"price": float(price), "change": float(ch), "date": datetime.datetime.fromtimestamp(meta.get("regularMarketTime", 0), datetime.timezone.utc).strftime("%Y-%m-%d"), "after": meta.get("postMarketPrice"), "afterChange": meta.get("postMarketChangePercent"), "pre": meta.get("preMarketPrice"), "preChange": meta.get("preMarketChangePercent")}
               except Exception as e:
                   print(sym, "chart failed:", e)
+          # Extended hours from Nasdaq API: primaryData is current extended price when marketStatus is After-Hours/Pre-Market, secondaryData is regular close
+          for sym in syms:
+              key = sym.lower()
+              if key not in out:
+                  continue
+              for asset in ["stocks", "etf"]:
+                  try:
+                      url = f"https://api.nasdaq.com/api/quote/{sym}/info?assetclass={asset}"
+                      req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json", "Accept-Language": "en-US"})
+                      j = json.loads(urllib.request.urlopen(req, timeout=30).read().decode())
+                      data_q = j.get("data", {})
+                      prim = data_q.get("primaryData", {}) or {}
+                      sec = data_q.get("secondaryData", {}) or {}
+                      status = str(data_q.get("marketStatus", ""))
+                      raw = prim.get("lastSalePrice", "")
+                      price_ext = float(str(raw).replace("$", "").replace(",", "")) if raw else None
+                      pct_raw = prim.get("percentageChange", "")
+                      pct_ext = float(str(pct_raw).replace("%", "").replace("+", "")) if pct_raw else None
+                      if price_ext and "After" in status:
+                          out[key]["after"] = price_ext
+                          out[key]["afterChange"] = pct_ext
+                          print(sym, "Nasdaq after-hours:", price_ext, pct_ext, status)
+                      elif price_ext and "Pre" in status:
+                          out[key]["pre"] = price_ext
+                          out[key]["preChange"] = pct_ext
+                          print(sym, "Nasdaq pre-market:", price_ext, pct_ext, status)
+                      else:
+                          print(sym, "Nasdaq status:", status, "no extended price used")
+                      break
+                  except Exception as e:
+                      print(sym, "Nasdaq", asset, "failed:", e)
+                      continue
           data = dict(out)
           data["updated"] = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
           if out:
