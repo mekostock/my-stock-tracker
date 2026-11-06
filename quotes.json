@@ -1,7 +1,7 @@
 {
   "nvda": {
-    "price": 187.13,
-    "change": -8.556489444878808,
+    "price": 188.11,
+    "change": -8.077599687255656,
     "date": "2026-11-06",
     "after": null,
     "afterChange": null,
@@ -9,8 +9,8 @@
     "preChange": null
   },
   "qqq": {
-    "price": 658.37,
-    "change": -4.651769033584846,
+    "price": 658.93,
+    "change": -4.570667207345517,
     "date": "2026-11-06",
     "after": null,
     "afterChange": null,
@@ -18,8 +18,8 @@
     "preChange": null
   },
   "tsla": {
-    "price": 359.95,
-    "change": -9.969735624421604,
+    "price": 360.26,
+    "change": -9.892198794427355,
     "date": "2026-11-06",
     "after": null,
     "afterChange": null,
@@ -27,8 +27,8 @@
     "preChange": null
   },
   "spy": {
-    "price": 737.8,
-    "change": -2.3712486105965267,
+    "price": 737.85,
+    "change": -2.3646324035357016,
     "date": "2026-11-06",
     "after": null,
     "afterChange": null,
@@ -36,8 +36,8 @@
     "preChange": null
   },
   "msft": {
-    "price": 533.114,
-    "change": 2.1467302791669187,
+    "price": 531.75,
+    "change": 1.885382537219067,
     "date": "2026-11-06",
     "after": null,
     "afterChange": null,
@@ -45,13 +45,13 @@
     "preChange": null
   },
   "aapl": {
-    "price": 344.1,
-    "change": -0.15378812059309194,
+    "price": 343.645,
+    "change": -0.28581377129095364,
     "date": "2026-11-06",
     "after": null,
     "afterChange": null,
     "pre": null,
     "preChange": null
   },
-  "updated": "2026-11-06 19:37 UTC"
+  "updated": "2026-11-06 20:28 UTC"
 }
