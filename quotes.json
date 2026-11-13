@@ -3,8 +3,8 @@
     "price": 162.85,
     "change": -12.746463780540074,
     "date": "2026-11-13",
-    "after": 161.5512,
-    "afterChange": -0.8,
+    "after": 161.61,
+    "afterChange": -0.76,
     "pre": null,
     "preChange": null
   },
@@ -12,8 +12,8 @@
     "price": 679.89,
     "change": 3.625971650663003,
     "date": "2026-11-13",
-    "after": 674.8299,
-    "afterChange": -0.74,
+    "after": 676.77,
+    "afterChange": -0.46,
     "pre": null,
     "preChange": null
   },
@@ -21,8 +21,8 @@
     "price": 390.22,
     "change": 8.933057897381497,
     "date": "2026-11-13",
-    "after": 387.761,
-    "afterChange": -0.63,
+    "after": 388.2983,
+    "afterChange": -0.49,
     "pre": null,
     "preChange": null
   },
@@ -30,8 +30,8 @@
     "price": 754.37,
     "change": 2.5948945314093814,
     "date": "2026-11-13",
-    "after": 750.4129,
-    "afterChange": -0.5,
+    "after": 751.9904,
+    "afterChange": -0.29,
     "pre": null,
     "preChange": null
   },
@@ -39,8 +39,8 @@
     "price": 523.88,
     "change": -1.2683515199487416,
     "date": "2026-11-13",
-    "after": 522.7,
-    "afterChange": -0.23,
+    "after": 522.62,
+    "afterChange": -0.24,
     "pre": null,
     "preChange": null
   },
@@ -48,10 +48,10 @@
     "price": 356.27,
     "change": 4.059935157870133,
     "date": "2026-11-13",
-    "after": 355.4,
-    "afterChange": -0.24,
+    "after": 356.28,
+    "afterChange": 0.0,
     "pre": null,
     "preChange": null
   },
-  "updated": "2026-11-13 21:42 UTC"
+  "updated": "2026-11-13 22:28 UTC"
 }
