@@ -12,8 +12,8 @@
     "price": 645.04,
     "change": -6.267346731185608,
     "date": "2026-11-19",
-    "after": 641.33,
-    "afterChange": -0.58,
+    "after": null,
+    "afterChange": null,
     "pre": null,
     "preChange": null
   },
@@ -30,8 +30,8 @@
     "price": 715.87,
     "change": -5.448277683854607,
     "date": "2026-11-19",
-    "after": 714.5701,
-    "afterChange": -0.18,
+    "after": null,
+    "afterChange": null,
     "pre": null,
     "preChange": null
   },
@@ -53,5 +53,5 @@
     "pre": null,
     "preChange": null
   },
-  "updated": "2026-11-20 01:44 UTC"
+  "updated": "2026-11-20 02:38 UTC"
 }
