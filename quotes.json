@@ -5,8 +5,8 @@
     "date": "2026-11-25",
     "after": null,
     "afterChange": null,
-    "pre": null,
-    "preChange": null
+    "pre": 152.54,
+    "preChange": 2.17
   },
   "qqq": {
     "price": 633.93,
@@ -14,8 +14,8 @@
     "date": "2026-11-25",
     "after": null,
     "afterChange": null,
-    "pre": null,
-    "preChange": null
+    "pre": 647.2037,
+    "preChange": 2.09
   },
   "tsla": {
     "price": 380.14,
@@ -23,8 +23,8 @@
     "date": "2026-11-25",
     "after": null,
     "afterChange": null,
-    "pre": null,
-    "preChange": null
+    "pre": 390.44,
+    "preChange": 2.71
   },
   "spy": {
     "price": 716.7,
@@ -32,8 +32,8 @@
     "date": "2026-11-25",
     "after": null,
     "afterChange": null,
-    "pre": null,
-    "preChange": null
+    "pre": 726.8905,
+    "preChange": 1.42
   },
   "msft": {
     "price": 489.93,
@@ -41,8 +41,8 @@
     "date": "2026-11-25",
     "after": null,
     "afterChange": null,
-    "pre": null,
-    "preChange": null
+    "pre": 498.03,
+    "preChange": 1.65
   },
   "aapl": {
     "price": 355.58,
@@ -50,8 +50,8 @@
     "date": "2026-11-25",
     "after": null,
     "afterChange": null,
-    "pre": null,
-    "preChange": null
+    "pre": 358.66,
+    "preChange": 0.87
   },
-  "updated": "2026-11-27 02:26 UTC"
+  "updated": "2026-11-27 14:17 UTC"
 }
